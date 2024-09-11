@@ -74,6 +74,11 @@ class MainActivity : AppCompatActivity() {
 //            val questionTextResId = questionBank[currentIndex].questionText
 //            binding.questionTextView.setText(questionTextResId)
         }
+        binding.prevButton.setOnClickListener {
+            // Restar 1 y asegurarse de que no sea negativo usando la lógica modular
+            currentIndex = if (currentIndex - 1 < 0) questionBank.size - 1 else currentIndex - 1
+            updateQuestion()
+        }
 
         updateQuestion()
 

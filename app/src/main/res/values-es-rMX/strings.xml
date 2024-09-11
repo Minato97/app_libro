@@ -11,4 +11,5 @@
     <string name="question_mideast">¿El  canal Suez conecta el mar Rojo con el Oceano Indíco?</string>
     <string name="question_africa">¿El Río Nilo esta en Egipto?</string>
     <string name="question_americas">¿El Río Amazonas es mas largo que el Río de las Americas?</string>
+    <string name="prev_button">Anterior</string>
 </resources>

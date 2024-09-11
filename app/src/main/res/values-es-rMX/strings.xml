@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Quizz App</string>
+    <string name="true_button">Verdadero</string>
+    <string name="false_button">Falso</string>
+    <string name="correct_toast">Correcto</string>
+    <string name="incorrect_toast">Incorrecto</string>
+    <string name="question_australia">¿Caberra es la capital de Australia?</string>
+    <string name="next_button">Siguiente</string>
+    <string name="question_oceans">¿El Oceano Pacífico es mas grande que el Atlantico?</string>
+    <string name="question_mideast">¿El  canal Suez conecta el mar Rojo con el Oceano Indíco?</string>
+    <string name="question_africa">¿El Río Nilo esta en Egipto?</string>
+    <string name="question_americas">¿El Río Amazonas es mas largo que el Río de las Americas?</string>
+</resources>

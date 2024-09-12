@@ -1,11 +1,14 @@
 package andrade.ignacio.quizzapp
 
 import andrade.ignacio.quizzapp.databinding.ActivityMainBinding
+import android.content.ContentValues.TAG
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import android.widget.Button
 import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
+import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
@@ -14,18 +17,20 @@ import androidx.core.view.WindowInsetsCompat
 class MainActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityMainBinding
+    private val quizViewModel: QuizViewModel by viewModels()
+
 
 //    private lateinit var trueButton: Button
 //    private lateinit var falseButton: Button
 
-    private val questionBank = listOf(
-        Question(R.string.question_australia, true),
-        Question(R.string.question_oceans, true),
-        Question(R.string.question_mideast, false),
-        Question(R.string.question_africa, false),
-        Question(R.string.question_americas, true)
-    )
-    private var currentIndex = 0
+//    private val questionBank = listOf(
+//        Question(R.string.question_australia, true),
+//        Question(R.string.question_oceans, true),
+//        Question(R.string.question_mideast, false),
+//        Question(R.string.question_africa, false),
+//        Question(R.string.question_americas, true)
+//    )
+//    private var currentIndex = 0
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -34,6 +39,9 @@ class MainActivity : AppCompatActivity() {
 //        setContentView(R.layout.activity_main)
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
+
+
+        Log.d(TAG, "Got a QuizViewModel: $quizViewModel")
 
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main)) { v, insets ->
             val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
@@ -68,7 +76,8 @@ class MainActivity : AppCompatActivity() {
         }
 
         binding.nextButton.setOnClickListener {
-            currentIndex = (currentIndex + 1) % questionBank.size
+//            currentIndex = (currentIndex + 1) % questionBank.size
+            quizViewModel.moveToNext()
             updateQuestion()
 
 //            val questionTextResId = questionBank[currentIndex].questionText
@@ -76,7 +85,8 @@ class MainActivity : AppCompatActivity() {
         }
         binding.prevButton.setOnClickListener {
             // Restar 1 y asegurarse de que no sea negativo usando la lógica modular
-            currentIndex = if (currentIndex - 1 < 0) questionBank.size - 1 else currentIndex - 1
+//            currentIndex = if (currentIndex - 1 < 0) questionBank.size - 1 else currentIndex - 1
+            quizViewModel.moveToPrev()
             updateQuestion()
         }
 
@@ -89,12 +99,14 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun updateQuestion() {
-        val questionTextResId = questionBank[currentIndex].questionText
+//        val questionTextResId = questionBank[currentIndex].questionText
+        val questionTextResId = quizViewModel.currentQuestionText
         binding.questionTextView.setText(questionTextResId)
     }
 
     private fun checkAnswer(userAnswer: Boolean) {
-        val correctAnswer = questionBank[currentIndex].answer
+//        val correctAnswer = questionBank[currentIndex].answer
+        val correctAnswer = quizViewModel.currentQuestionAnswer
         val messageResId = if (userAnswer == correctAnswer) {
             R.string.correct_toast
         } else {

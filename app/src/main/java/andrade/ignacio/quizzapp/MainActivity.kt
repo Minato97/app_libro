@@ -1,13 +1,16 @@
 package andrade.ignacio.quizzapp
 
 import andrade.ignacio.quizzapp.databinding.ActivityMainBinding
+import android.app.Activity
 import android.content.ContentValues.TAG
+import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.view.View
 import android.widget.Button
 import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
@@ -18,6 +21,18 @@ class MainActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityMainBinding
     private val quizViewModel: QuizViewModel by viewModels()
+
+    private val cheatLauncher = registerForActivityResult(
+        ActivityResultContracts.StartActivityForResult()
+    ) { result ->
+// Handle the result
+        if (result.resultCode == Activity.RESULT_OK) {
+            quizViewModel.isCheater =
+                result.data?.getBooleanExtra(EXTRA_ANSWER_SHOWN, false) ?: false
+        }
+
+    }
+
 
 
 //    private lateinit var trueButton: Button
@@ -90,6 +105,18 @@ class MainActivity : AppCompatActivity() {
             updateQuestion()
         }
 
+        binding.cheatButton.setOnClickListener {
+// Start CheatActivity
+//            val intent = Intent(this, CheatActivity::class.java)
+            val answerIsTrue = quizViewModel.currentQuestionAnswer
+            val intent = CheatActivity.newIntent(this@MainActivity, answerIsTrue)
+
+//            startActivity(intent)
+            cheatLauncher.launch(intent)
+
+
+        }
+
         updateQuestion()
 
 //        val questionTextResId = questionBank[currentIndex].questionText
@@ -107,11 +134,17 @@ class MainActivity : AppCompatActivity() {
     private fun checkAnswer(userAnswer: Boolean) {
 //        val correctAnswer = questionBank[currentIndex].answer
         val correctAnswer = quizViewModel.currentQuestionAnswer
-        val messageResId = if (userAnswer == correctAnswer) {
-            R.string.correct_toast
-        } else {
-            R.string.incorrect_toast
+//        val messageResId = if (userAnswer == correctAnswer) {
+//            R.string.correct_toast
+//        } else {
+//            R.string.incorrect_toast
+//        }
+        val messageResId = when {
+            quizViewModel.isCheater -> R.string.judgment_toast
+            userAnswer == correctAnswer -> R.string.correct_toast
+            else -> R.string.incorrect_toast
         }
+
         Toast.makeText(this, messageResId, Toast.LENGTH_SHORT)
             .show()
     }
